@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>AHMED YASSER — GYM PROGRAM</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#060607">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GYM PROGRAM">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black: #060607;
+    --panel: #101013;
+    --panel-2: #17171b;
+    --line: #232327;
+    --red: #ff2d3a;
+    --red-dim: #7a1017;
+    --blue: #2e8bff;
+    --blue-dim: #103a6e;
+    --gold: #f5b942;
+    --gold-dim: #6b4c10;
+    --white: #f2f2f0;
+    --muted: #8a8a90;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  body{
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(255,45,58,0.08), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(46,139,255,0.08), transparent 40%);
+  }
+
+  /* PWA Install Button & Banner */
+  .pwa-install-bar{
+    display: flex;
+    justify-content: center;
+    margin: 22px auto 0;
+    position: relative;
+    z-index: 10;
+  }
+  .pwa-install-btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(255, 45, 58, 0.18), rgba(46, 139, 255, 0.18));
+    border: 1px solid rgba(255, 45, 58, 0.45);
+    border-radius: 50px;
+    padding: 9px 20px;
+    color: var(--white);
+    font-family: 'Cairo', sans-serif;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 45, 58, 0.2);
+    transition: all 0.25s ease;
+    backdrop-filter: blur(8px);
+  }
+  .pwa-install-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba(255, 45, 58, 0.4);
+    border-color: var(--red);
+  }
+  .pwa-install-btn .badge{
+    background: var(--red);
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+
+  /* Modal Guide */
+  .install-modal-overlay{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .install-modal-overlay.active{
+    display: flex;
+    animation: modalFadeIn 0.3s ease;
+  }
+  @keyframes modalFadeIn{
+    from{ opacity: 0; transform: scale(0.95); }
+    to{ opacity: 1; transform: scale(1); }
+  }
+  .install-modal-card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    max-width: 460px;
+    width: 100%;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255,45,58,0.15);
+    font-family: 'Cairo', sans-serif;
+    position: relative;
+    text-align: right;
+  }
+  .install-modal-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+  }
+  .install-modal-header h3{
+    font-size: 16.5px;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+  }
+  .modal-close-btn{
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+  }
+  .modal-close-btn:hover{ color: var(--white); }
+  .guide-tabs{
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .guide-tab-btn{
+    flex: 1;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .guide-tab-btn.active{
+    background: rgba(255, 45, 58, 0.15);
+    border-color: var(--red);
+    color: var(--white);
+  }
+  .guide-content{
+    display: none;
+    font-size: 14px;
+    line-height: 1.85;
+    color: #dedee0;
+  }
+  .guide-content.active{
+    display: block;
+  }
+  .guide-content ol{
+    padding-inline-start: 22px;
+    margin-bottom: 14px;
+  }
+  .guide-content li{
+    margin-bottom: 8px;
+  }
+  .guide-content strong{
+    color: var(--gold);
+  }
+  .guide-tip{
+    background: rgba(46, 139, 255, 0.1);
+    border: 1px solid var(--blue-dim);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: var(--blue);
+    margin-top: 12px;
+  }
+  .modal-ok-btn{
+    width: 100%;
+    background: linear-gradient(135deg, var(--red), #d61e2b);
+    border: none;
+    color: #fff;
+    padding: 12px;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 14.5px;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: opacity 0.2s;
+  }
+  .modal-ok-btn:hover{ opacity: 0.9; }
+
+  .bolt{ display:inline-block; filter: drop-shadow(0 0 6px currentColor); }
+  .bolt-bg{
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    pointer-events:none; z-index:0; opacity:0.05;
+  }
+
+  header{
+    position:relative; z-index:2; text-align:center;
+    padding: 60px 20px 40px; border-bottom: 1px solid var(--line);
+  }
+  .logo-row{ display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom: 6px; }
+  .hero-name{
+    font-family:'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 12vw, 128px);
+    letter-spacing: 6px; line-height:0.9;
+    background: linear-gradient(180deg, var(--white) 0%, var(--white) 55%, var(--red) 130%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow: 0 0 40px rgba(255,45,58,0.15);
+  }
+  .hero-sub{
+    font-family:'Rajdhani', sans-serif; font-weight:600;
+    letter-spacing: 10px; font-size: 14px; color: var(--blue); margin-top: 10px;
+  }
+  .hero-line{ width:120px; height:3px; margin:20px auto 0; background: linear-gradient(90deg, var(--red), var(--blue)); }
+
+  .legend{
+    display:flex; justify-content:center; gap: 24px; flex-wrap:wrap;
+    margin-top: 28px; font-family:'Cairo', sans-serif; font-size: 13px;
+  }
+  .legend span{ display:flex; align-items:center; gap:8px; color: var(--muted); }
+  .dot{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .dot.red{ background: var(--red); box-shadow:0 0 8px var(--red); }
+  .dot.blue{ background: var(--blue); box-shadow:0 0 8px var(--blue); }
+  .dot.white{ background: var(--white); box-shadow:0 0 8px var(--white); }
+  .dot.gold{ background: var(--gold); box-shadow:0 0 8px var(--gold); }
+
+  .tabs{
+    display:flex; justify-content:center; gap: 14px; margin: 40px auto 10px;
+    flex-wrap:wrap; position:relative; z-index:2;
+  }
+  .tab-btn{
+    font-family:'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px;
+    background: var(--panel); border: 1px solid var(--line); color: var(--muted);
+    padding: 14px 34px; cursor:pointer; position:relative;
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+    transition: all .25s ease;
+  }
+  .tab-btn:hover{ color: var(--white); }
+  .tab-btn.active{
+    color: var(--white); background: linear-gradient(135deg, var(--red-dim), var(--panel) 60%);
+    border-color: var(--red); box-shadow: 0 0 24px rgba(255,45,58,0.25);
+  }
+  .tab-btn.active.day2{
+    background: linear-gradient(135deg, var(--blue-dim), var(--panel) 60%);
+    border-color: var(--blue); box-shadow: 0 0 24px rgba(46,139,255,0.25);
+  }
+
+  .reset-row{
+    display:flex; justify-content:center; margin-top:14px;
+  }
+  .reset-btn{
+    font-family:'Cairo', sans-serif; font-size:12px; font-weight:600;
+    color: var(--muted); background:transparent; border:1px solid var(--line);
+    padding: 7px 16px; cursor:pointer; letter-spacing:0.5px; transition: all .2s ease;
+  }
+  .reset-btn:hover{ color:var(--red); border-color: var(--red-dim); }
+
+  main{ max-width: 900px; margin: 0 auto; padding: 30px 18px 90px; position:relative; z-index:2; }
+
+  .day-panel{ display:none; }
+  .day-panel.active{ display:block; animation: fade .4s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  .day-title-row{ display:flex; align-items:center; gap:16px; margin: 10px 0 30px; }
+  .day-title-row .num{ font-family:'Bebas Neue', sans-serif; font-size: 60px; color: var(--red); line-height:1; }
+  .day-panel[data-day="2"] .day-title-row .num{ color: var(--blue); }
+  .day-title-en{ font-family:'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 3px; color: var(--white); }
+  .day-title-ar{ font-family:'Cairo', sans-serif; font-weight:700; color: var(--muted); font-size: 15px; margin-top:2px; }
+
+  .card{
+    background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    border: 1px solid var(--line); border-inline-start: 3px solid var(--red);
+    padding: 22px 24px; margin-bottom: 16px; position: relative; overflow:hidden;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .day-panel[data-day="2"] .card{ border-inline-start-color: var(--blue); }
+  .card:hover{ transform: translateX(-2px); }
+  .card::after{
+    content:""; position:absolute; inset:0;
+    background: radial-gradient(circle at 100% 0%, rgba(255,45,58,0.06), transparent 55%);
+    pointer-events:none;
+  }
+  .day-panel[data-day="2"] .card::after{
+    background: radial-gradient(circle at 100% 0%, rgba(46,139,255,0.06), transparent 55%);
+  }
+
+  .card-top{ display:flex; align-items:center; justify-content:space-between; gap: 14px; flex-wrap:wrap; margin-bottom: 10px; }
+  .card-title-wrap{ display:flex; align-items:center; gap:12px; }
+  .ex-num{ font-family:'Bebas Neue', sans-serif; font-size: 20px; color: var(--muted); min-width: 30px; }
+  .ex-name{ font-family:'Bebas Neue', sans-serif; font-size: 24px; letter-spacing:1px; color: var(--red); direction:ltr; text-align:left; }
+  .day-panel[data-day="2"] .ex-name{ color: var(--blue); }
+
+  .sets-badge{
+    font-family:'Rajdhani', sans-serif; font-weight:700; font-size: 13px; letter-spacing:0.5px;
+    color: var(--blue); border: 1px solid var(--blue-dim); background: rgba(46,139,255,0.08);
+    padding: 6px 14px; white-space:nowrap; direction:rtl;
+  }
+  .day-panel[data-day="2"] .sets-badge{ color: var(--red); border-color: var(--red-dim); background: rgba(255,45,58,0.08); }
+
+  .ex-explain{
+    font-family:'Cairo', sans-serif; font-weight:400; font-size: 15.5px;
+    line-height: 1.9; color: var(--white); opacity:0.92; margin-bottom: 16px;
+  }
+
+  .weight-log{
+    border-top: 1px dashed var(--line);
+    padding-top: 14px;
+    margin-top: 4px;
+  }
+  .weight-log-title{
+    display:flex; align-items:center; gap:8px;
+    font-family:'Cairo', sans-serif; font-weight:700; font-size: 12.5px;
+    color: var(--gold); letter-spacing:0.5px; margin-bottom: 10px;
+  }
+  .weight-log-title svg{ flex-shrink:0; }
+
+  .weight-grid{
+    display:flex; flex-wrap:wrap; gap: 10px;
+  }
+  .weight-slot{
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+  }
+  .weight-slot label{
+    font-family:'Cairo', sans-serif; font-size: 11px; color: var(--muted);
+    letter-spacing:0.3px;
+  }
+  .weight-input-wrap{
+    display:flex; align-items:center;
+    background: #000000;
+    border: 1px solid var(--gold-dim);
+    padding: 6px 8px;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .weight-input-wrap:focus-within{
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(245,185,66,0.25);
+  }
+  .weight-input-wrap input{
+    width: 46px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--gold);
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size: 15px;
+    text-align:center;
+    -moz-appearance: textfield;
+  }
+  .weight-input-wrap input::-webkit-outer-spin-button,
+  .weight-input-wrap input::-webkit-inner-spin-button{
+    -webkit-appearance: none; margin:0;
+  }
+  .weight-input-wrap span{
+    font-family:'Cairo', sans-serif;
+    font-size: 10.5px;
+    color: var(--gold-dim);
+    margin-inline-start: 4px;
+  }
+  .weight-input-wrap.filled{
+    border-color: var(--gold);
+    background: rgba(245,185,66,0.06);
+  }
+  .weight-input-wrap.filled span{ color: var(--gold); opacity:0.7; }
+
+  .saved-tick{
+    font-family:'Cairo', sans-serif;
+    font-size: 10px;
+    color: var(--gold);
+    opacity:0;
+    transition: opacity .3s ease;
+    margin-inline-start: 6px;
+  }
+  .saved-tick.show{ opacity:0.85; }
+
+  footer{
+    text-align:center; padding: 30px 20px 50px; border-top: 1px solid var(--line);
+    font-family:'Cairo', sans-serif; color: var(--muted); font-size: 13px; letter-spacing:1px;
+  }
+  footer .foot-name{
+    font-family:'Bebas Neue', sans-serif; font-size: 34px; letter-spacing:5px;
+    color: var(--white); display:block; margin-bottom:8px;
+  }
+
+  @media (max-width:520px){
+    .hero-name{ letter-spacing:3px; }
+    .tab-btn{ padding:12px 22px; font-size:18px; }
+    .ex-name{ font-size:20px; }
+    .weight-input-wrap input{ width:38px; }
+  }
+</style>
+</head>
+<body>
+
+<svg class="bolt-bg" viewBox="0 0 400 400" preserveAspectRatio="none">
+  <polygon points="220,0 120,220 190,220 160,400 300,150 220,150" fill="#ff2d3a"/>
+</svg>
+
+<header>
+  <div class="logo-row">
+    <svg class="bolt" width="34" height="48" viewBox="0 0 34 48" fill="none" style="color:var(--red)">
+      <polygon points="20,0 4,26 15,26 10,48 32,18 19,18" fill="currentColor"/>
+    </svg>
+    <div class="hero-name">AHMED YASSER</div>
+    <svg class="bolt" width="34" height="48" viewBox="0 0 34 48" fill="none" style="color:var(--blue)">
+      <polygon points="20,0 4,26 15,26 10,48 32,18 19,18" fill="currentColor"/>
+    </svg>
+  </div>
+  <div class="hero-sub">TRAINING PROGRAM</div>
+  <div class="hero-line"></div>
+
+  <div class="legend">
+    <span><i class="dot red"></i> اسم التمرين بالإنجليزي</span>
+    <span><i class="dot blue"></i> عدد المجموعات</span>
+    <span><i class="dot white"></i> شرح التمرين</span>
+    <span><i class="dot gold"></i> أوزانك (بيتحفظ تلقائي)</span>
+  </div>
+
+  <div id="pwa-install-container" class="pwa-install-bar">
+    <button id="pwa-install-btn" class="pwa-install-btn" onclick="handlePwaInstallClick()">
+      <span>📲 تثبيت كبرنامج على الموبايل</span>
+      <span class="badge">تثبيت الآن</span>
+    </button>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" data-target="1" onclick="showDay(1)">DAY 01</button>
+  <button class="tab-btn day2" data-target="2" onclick="showDay(2)">DAY 02</button>
+</div>
+<div class="reset-row">
+  <button class="reset-btn" onclick="resetWeights()">مسح كل الأوزان المحفوظة</button>
+</div>
+
+<main>
+
+  <section class="day-panel active" data-day="1">
+    <div class="day-title-row">
+      <span class="num">01</span>
+      <div>
+        <div class="day-title-en">BACK &amp; SHOULDERS</div>
+        <div class="day-title-ar">ظهر وكتف</div>
+      </div>
+    </div>
+    <div id="day1-cards"></div>
+  </section>
+
+  <section class="day-panel" data-day="2">
+    <div class="day-title-row">
+      <span class="num">02</span>
+      <div>
+        <div class="day-title-en">CHEST &amp; ARMS</div>
+        <div class="day-title-ar">صدر ودراع</div>
+      </div>
+    </div>
+    <div id="day2-cards"></div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="foot-name">AHMED YASSER</span>
+  TRAIN HARD · STAY CONSISTENT
+</footer>
+
+<script>
+  // ============= DATA =============
+  const DAY1 = [
+    { name:"Cable Raises", badge:"تسخين + مجموعتين فيلر", sets:3,
+      explain:"الوقوف أمام جهاز الكابل والسحب للأعلى / للخلف بحركة تحكم كاملة، مع التركيز على انقباض الكتف في قمة الحركة." },
+    { name:"Wide Grip Lat Pulldown", badge:"تسخين + مجموعتين فيلر", sets:3,
+      explain:"مسك واسع على البار والسحب لأسفل حتى مستوى الصدر، مع فتح الظهر وتجنب الاعتماد على الذراعين." },
+    { name:"Traps (Shrugs)", badge:"مجموعتين فيلر", sets:2,
+      explain:"رفعة الترابس لأعلى في خط مستقيم مع ثبات الذراعين والانتباه لعدم لف الكتفين أثناء الحركة." },
+    { name:"T-Bar Row Machine", badge:"مجموعة واحدة", sets:1,
+      explain:"سحب البار بجهاز الـ T-bar مع ثبات الجذع والسحب بالمرفقين قريبين من الجسم لتفعيل عضلات الظهر." },
+    { name:"Cable Lat Pullover", badge:"تسخين + 2-3 فيلر", sets:4,
+      explain:"سحب الحبل من زاوية مرتفعة إلى أسفل مع فرد الذراعين، والحرص على مسك اليد الفاضية بجسم الجهاز لثبات الحركة." },
+    { name:"DB Lateral Raises", badge:"تسخين + مجموعتين فيلر", sets:3,
+      explain:"رفعة جانبية بالدمبل واقفاً أو جالساً، رفع الذراعين لمستوى الكتف مع ميل بسيط للأمام أثناء الرفع." },
+    { name:"Cable Reverse Curl", badge:"مجموعتين", sets:2,
+      explain:"سحب بالمسطرة من أسفل الكابل بمسكة معكوسة (الكف لأسفل) لتنشيط الساعد." },
+    { name:"Cable Crunches", badge:"مجموعتين", sets:2,
+      explain:"الجلوس أمام جهاز اللات بالحبل والانحناء للأسفل من منطقة البطن فقط لتفعيل عضلات البطن." },
+  ];
+
+  const DAY2 = [
+    { name:"Incline Chest Press (DB)", badge:"تسخين + 3 هرمي", sets:4,
+      explain:"ضغط بالدمبل على بنش مائل، البدء بمجموعة تسخين ثم 3 مجموعات بزيادة الثقل تدريجياً." },
+    { name:"Chest Fly Machine / Cable", badge:"تسخين + فيلر", sets:2,
+      explain:"تفتيح للصدر باستخدام جهاز مخصص أو بالكابل، مع تحكم في المسار والتركيز على انقباض الصدر." },
+    { name:"Triceps Pushdown", badge:"تسخين + 3 فيلر", sets:4,
+      explain:"دفع للأسفل باستخدام الحبل أو الذراع الواحدة أو البار المستقيم (يمكن التبديل بينهم)، مع ثبات المرفقين بجانب الجسم." },
+    { name:"Biceps Cable Curl (Single Arm)", badge:"تسخين + مجموعتين", sets:3,
+      explain:"تنزيل جهاز الكابل لمستوى الركبة تقريباً، والسحب بذراع واحدة مع التحكم الكامل في حركة الساعد." },
+    { name:"Triceps Overhead Extension", badge:"تسخين + مجموعتين", sets:3,
+      explain:"مد الذراعين فوق الرأس باستخدام البار أو الحبل لتنشيط الرأس الطويلة لعضلة الترايسبس." },
+    { name:"Biceps Cable (Straight Bar)", badge:"تسخين + مجموعتين", sets:3,
+      explain:"سحب مستقيم بالبار على جهاز الكابل مع ثبات المرفقين والتركيز على انقباض البايسبس." },
+    { name:"Hammer Curl", badge:"مجموعة أو مجموعتين", sets:2,
+      explain:"بالدمبل أو بالكابل بمسكة مطرقة (الكف للداخل) لتنشيط عضلة الساعد والرأس الجانبية للبايسبس." },
+  ];
+
+  const DUMBBELL_ICON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <path d="M4 8v8"/><path d="M2 10v4"/><path d="M6 7v10"/>
+    <path d="M20 8v8"/><path d="M22 10v4"/><path d="M18 7v10"/>
+    <line x1="6" y1="12" x2="18" y2="12"/>
+  </svg>`;
+
+  function buildCards(container, dayKey, exercises){
+    exercises.forEach((ex, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      let slots = '';
+      for(let s=1; s<=ex.sets; s++){
+        const inputId = `${dayKey}-e${i+1}-s${s}`;
+        slots += `
+          <div class="weight-slot">
+            <label>مجموعة ${s}</label>
+            <div class="weight-input-wrap" id="wrap-${inputId}">
+              <input type="number" inputmode="decimal" min="0" step="0.5"
+                     id="${inputId}" placeholder="0" />
+              <span>كجم</span>
+            </div>
+          </div>`;
+      }
+
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="card-title-wrap">
+            <span class="ex-num">${String(i+1).padStart(2,'0')}</span>
+            <span class="ex-name">${ex.name}</span>
+          </div>
+          <span class="sets-badge">${ex.badge}</span>
+        </div>
+        <p class="ex-explain">${ex.explain}</p>
+        <div class="weight-log">
+          <div class="weight-log-title">${DUMBBELL_ICON} سجّل أوزانك لكل مجموعة</div>
+          <div class="weight-grid">${slots}</div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  buildCards(document.getElementById('day1-cards'), 'day1', DAY1);
+  buildCards(document.getElementById('day2-cards'), 'day2', DAY2);
+
+  // ============= PERSISTENCE (localStorage) =============
+  const STORAGE_KEY = 'ahmedYasserWeights';
+
+  function loadWeights(){
+    let data = {};
+    try{
+      data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    }catch(e){ data = {}; }
+
+    document.querySelectorAll('.weight-input-wrap input').forEach(input => {
+      const val = data[input.id];
+      if(val !== undefined && val !== ''){
+        input.value = val;
+        input.parentElement.classList.add('filled');
+      }
+    });
+  }
+
+  function saveWeight(input){
+    let data = {};
+    try{
+      data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    }catch(e){ data = {}; }
+
+    if(input.value === ''){
+      delete data[input.id];
+      input.parentElement.classList.remove('filled');
+    }else{
+      data[input.id] = input.value;
+      input.parentElement.classList.add('filled');
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  document.addEventListener('input', function(e){
+    if(e.target.matches('.weight-input-wrap input')){
+      saveWeight(e.target);
+    }
+  });
+
+  function resetWeights(){
+    if(confirm('هل أنت متأكد إنك عايز تمسح كل الأوزان المحفوظة؟')){
+      localStorage.removeItem(STORAGE_KEY);
+      document.querySelectorAll('.weight-input-wrap input').forEach(input => {
+        input.value = '';
+        input.parentElement.classList.remove('filled');
+      });
+    }
+  }
+
+  loadWeights();
+
+  // ============= DAY TABS =============
+  function showDay(n){
+    document.querySelectorAll('.day-panel').forEach(p => p.classList.toggle('active', p.dataset.day == n));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.target == n));
+  }
+
+  // ============= PWA: تسجيل الـ service worker وتثبيت التطبيق =============
+  let deferredPrompt = null;
+  const installContainer = document.getElementById('pwa-install-container');
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+  if (isStandalone && installContainer) {
+    installContainer.style.display = 'none';
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installContainer && !isStandalone) {
+      installContainer.style.display = 'flex';
+    }
+  });
+
+  function handlePwaInstallClick() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          if (installContainer) installContainer.style.display = 'none';
+        }
+        deferredPrompt = null;
+      });
+    } else {
+      openInstallModal();
+    }
+  }
+
+  function openInstallModal() {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      switchInstallTab('ios');
+    } else {
+      switchInstallTab('android');
+    }
+    const modal = document.getElementById('install-modal');
+    if (modal) modal.classList.add('active');
+  }
+
+  function closeInstallModal(event) {
+    if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-close-btn') && !event.target.classList.contains('modal-ok-btn')) return;
+    const modal = document.getElementById('install-modal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  function switchInstallTab(tab) {
+    document.querySelectorAll('.guide-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.guide-content').forEach(c => c.classList.remove('active'));
+    const targetTab = document.getElementById('tab-' + tab);
+    const targetContent = document.getElementById('guide-' + tab);
+    if (targetTab) targetTab.classList.add('active');
+    if (targetContent) targetContent.classList.add('active');
+  }
+
+  window.addEventListener('appinstalled', () => {
+    if (installContainer) installContainer.style.display = 'none';
+    deferredPrompt = null;
+  });
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+    });
+  }
+</script>
+
+<!-- Install Guide Modal -->
+<div id="install-modal" class="install-modal-overlay" onclick="closeInstallModal(event)">
+  <div class="install-modal-card" onclick="event.stopPropagation()">
+    <div class="install-modal-header">
+      <h3>📲 تثبيت التطبيق على الموبايل</h3>
+      <button class="modal-close-btn" onclick="closeInstallModal()">&times;</button>
+    </div>
+    <div class="guide-tabs">
+      <button id="tab-ios" class="guide-tab-btn active" onclick="switchInstallTab('ios')">🍎 آيفون (iOS / Safari)</button>
+      <button id="tab-android" class="guide-tab-btn" onclick="switchInstallTab('android')">🤖 أندرويد (Chrome)</button>
+    </div>
+    <div id="guide-ios" class="guide-content active">
+      <ol>
+        <li>اضغط على أيقونة <strong>المشاركة (Share ⎋)</strong> في أسفل متصفح Safari.</li>
+        <li>انزل لأسفل واضغط على <strong>"إضافة إلى الصفحة الرئيسية"</strong> (Add to Home Screen ➕).</li>
+        <li>اضغط على <strong>"إضافة" (Add)</strong> في أعلى الزاوية.</li>
+        <li>⚡ سيظهر التطبيق على شاشة هاتفك الرئيسية ويعمل بدون إنترنت وبشاشة كاملة!</li>
+      </ol>
+      <div class="guide-tip">💡 <strong>تنبيه:</strong> تأكد من فتح الرابط عبر متصفح <strong>Safari</strong> الأصلي على الآيفون.</div>
+    </div>
+    <div id="guide-android" class="guide-content">
+      <ol>
+        <li>اضغط على زر <strong>(⋮)</strong> الثلاث نقاط في أعلى متصفح Chrome.</li>
+        <li>اختر <strong>"تثبيت التطبيق"</strong> (Install App) أو <strong>"إضافة إلى الشاشة الرئيسية"</strong>.</li>
+        <li>اضغط <strong>"تثبيت" (Install)</strong> للتأكيد.</li>
+        <li>⚡ سيتم تنزيل وتثبيت البرنامج على هاتفك كأي تطبيق رسمي!</li>
+      </ol>
+      <div class="guide-tip">💡 <strong>تنبيه:</strong> يجب فتح الموقع عبر متصفح <strong>Chrome</strong> أو Samsung Internet.</div>
+    </div>
+    <button class="modal-ok-btn" onclick="closeInstallModal()">فهمت ذلك ✓</button>
+  </div>
+</div>
+
+</body>
+</html>
